@@ -2,12 +2,11 @@ import { useSelector } from 'react-redux';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { getTableById } from '../../redux/tableRedux';
 import { Button } from 'react-bootstrap';
-import { useState } from 'react';
 
 const TableDetails = () => {
   const { id } = useParams();
   const table = useSelector(state => getTableById(state, id));
-  const [peopleAmount, setPeopleAmount] = useState(table.peopleAmount);
+
   if (!table) return <Navigate to='/' />;
   else
     return (
@@ -23,7 +22,11 @@ const TableDetails = () => {
           <p style={{ width: '100px' }} className='my-auto'>
             <b>People:</b>
           </p>
-          <p className='my-auto'>{peopleAmount}</p>
+          <p className='my-auto'>
+            {table.status === 'Free' || table.status === 'Clining'
+              ? 0
+              : table.peopleAmount}
+          </p>
           <b className='mx-1'>/</b>
           <p className='my-auto'>{table.maxPeopleAmount}</p>
         </div>

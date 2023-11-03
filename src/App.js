@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import TableDetails from './components/pages/TableDetails';
 import EditTable from './components/pages/EditTable';
+import PageNotFound from './components/pages/PageNotFound';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -23,6 +24,7 @@ const App = () => {
         <Route path={'/'} element={<Home />} />
         <Route path={'/table/:id'} element={<TableDetails />} />
         <Route path={'/table/update/:id'} element={<EditTable />} />
+        <Route path={'*'} element={<PageNotFound />} />
       </Routes>
       <Footer />
     </Container>
