@@ -6,16 +6,28 @@ import Home from './components/pages/Home';
 import { fetchTables } from './redux/tableRedux';
 import { fetchStatuses } from './redux/statusRedux';
 import { useDispatch } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import TableDetails from './components/pages/TableDetails';
 import EditTable from './components/pages/EditTable';
 import PageNotFound from './components/pages/PageNotFound';
 
 const App = () => {
   const dispatch = useDispatch();
+  // const firstRender = useRef(true);
 
-  useEffect(() => fetchStatuses(dispatch), [dispatch]);
-  useEffect(() => fetchTables(dispatch), [dispatch]);
+  // useEffect(() => {
+  //   if (firstRender.current) {
+  //     firstRender.current = false;
+
+  //     dispatch(fetchStatuses());
+  //     dispatch(fetchTables());
+  //   }
+  // }, [dispatch]);
+
+  useEffect(() => {
+    fetchStatuses(dispatch);
+    fetchTables(dispatch);
+  }, [dispatch]);
 
   return (
     <Container>
