@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
+import { API_URL } from '../settings';
 
 const selectStatus = state => state.status;
 
@@ -9,7 +10,7 @@ const UPDATE_STATUSES = createActionName('UPDATE_STATUS');
 export const updateStatuses = payload => ({ type: UPDATE_STATUSES, payload });
 
 export const fetchStatuses = dispatch => {
-  fetch('http://localhost:3131/api/statuses')
+  fetch(`${API_URL}/statuses`)
     .then(res => res.json())
     .then(statuses => dispatch(updateStatuses(statuses)));
 };

@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
+import { API_URL } from '../settings';
 
 const selectTables = state => state.tables;
 const selectTableId = (state, id) => id;
@@ -15,14 +16,14 @@ export const updateTables = payload => ({ type: UPDATE_TABLES, payload });
 export const editTable = payload => ({ type: EDIT_TABLE, payload });
 
 export const fetchTables = dispatch => {
-  fetch('http://localhost:3131/api/tables')
+  fetch(`${API_URL}/tables`)
     .then(res => res.json())
     .then(tables => dispatch(updateTables(tables)));
 };
 
 // export const fetchTables = () => {
 //   return dispatch => {
-//     fetch('http://localhost:3131/api/tables')
+//     fetch(`${API_URL}/tables`)
 //       .then(res => res.json())
 //       .then(tables => dispatch(updateTables(tables)));
 //   };
@@ -38,7 +39,7 @@ export const updateDataOnServer = (id, updatedData) => {
       body: JSON.stringify(updatedData),
     };
 
-    fetch(`http://localhost:3131/tables/${id}`, options)
+    fetch(`${API_URL}/tables/${id}`, options)
       .then(res => res.json())
       .then(data => dispatch(editTable(data)));
   };
