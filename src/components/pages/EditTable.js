@@ -1,13 +1,15 @@
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, Navigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { getTableById, updateDataOnServer } from '../../redux/tableRedux';
 import { getStatus } from '../../redux/statusRedux';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 const EditTable = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const table = useSelector(state => getTableById(state, id));
   const allStatuses = useSelector(getStatus);
@@ -22,73 +24,127 @@ const EditTable = () => {
     maxPeopleAmount,
     bill,
   };
+  const checkStatus = selected => {
+    if (selected === 'Cleaning' || selected === 'Free') {
+      setPeopleAmount(0);
+    }
+  };
 
   const handleSubmit = e => {
-    // e.preventDefault();
+    e.preventDefault();
     dispatch(updateDataOnServer(id, updatedData));
+    navigate(`/`);
   };
+
+  const validatePeople = value => {
+    if (value > peopleAmount) {
+      setMaxPeopleAmount(value);
+    } else {
+      setPeopleAmount(value);
+    }
+  };
+
+  const {
+    register,
+    handleSubmit: validate,
+    formState: { errors },
+  } = useForm();
 
   if (!table) return <Navigate to='/' />;
   else
     return (
-      <div className='ms-2'>
+      <form onSubmit={validate(handleSubmit)} className='ms-2'>
         <h2 className='fs-1'>{table.name}</h2>
-        <div className='d-flex my-3'>
-          <p style={{ width: '100px' }} className='my-auto'>
+        <Form.Group className='d-flex my-3'>
+          <Form.Label style={{ width: '100px' }} className='my-auto'>
             <b>Status:</b>
-          </p>
+          </Form.Label>
           <select
             style={{ width: '150px' }}
             className='ps-1'
-            defaultValue={table.status}
-            onChange={e => setStatus(e.target.value)}>
+            value={status}
+            onChange={e => {
+              setStatus(e.target.value);
+              checkStatus(e.target.value);
+              setBill(0);
+            }}>
             {allStatuses.map(status => (
               <option key={status.id} value={status.name}>
                 {status.name}
               </option>
             ))}
           </select>
-        </div>
-        <div className='d-flex my-3'>
-          <p style={{ width: '100px' }} className='my-auto'>
+        </Form.Group>
+        <Form.Group className='d-flex my-3'>
+          <Form.Label style={{ width: '100px' }} className='my-auto'>
             <b>People:</b>
-          </p>
+          </Form.Label>
           <input
+            {...register('peopleAmount', {
+              required: true,
+              min: 0,
+              max: 10,
+            })}
             style={{ width: '30px' }}
             className='me-1 ps-1'
-            defaultValue={table.peopleAmount}
-            onChange={e => setPeopleAmount(e.target.value)}
+            name='peopleAmount'
+            value={peopleAmount}
+            on
+            onChange={e => {
+              setPeopleAmount(e.target.value);
+            }}
           />
           /
           <input
+            {...register('maxPeopleAmount', {
+              required: true,
+              min: 0,
+              max: 10,
+            })}
             style={{ width: '30px' }}
             className='ms-1 ps-1'
-            defaultValue={table.maxPeopleAmount}
-            onChange={e => setMaxPeopleAmount(e.target.value)}
+            value={maxPeopleAmount}
+            onChange={e => {
+              validatePeople(e.target.value);
+            }}
           />
-        </div>
-        <div className={`d-flex my-3 `}>
-          <p style={{ width: '100px' }} className='my-auto'>
+          {errors.peopleAmount && (
+            <small className='d-block form-text text-danger ms-2 mt-2'>
+              Amount of people is required and should not be greater than
+              {maxPeopleAmount}.
+            </small>
+          )}
+          {errors.maxPeopleAmount && (
+            <small className='d-block form-text text-danger ms-2 mt-2'>
+              Max amount of people should not be greater than 10
+            </small>
+          )}
+        </Form.Group>
+        <Form.Group className={`d-flex my-3 `}>
+          <Form.Label style={{ width: '100px' }} className='my-auto'>
             <b>Bill:</b>
-          </p>
+          </Form.Label>
           $
           <input
-            style={{ width: '40px' }}
+            {...register('bill', {
+              min: 0,
+            })}
+            style={{ width: '60px' }}
+            type='number'
             className='ms-1 ps-1'
-            defaultValue={table.bill}
+            value={bill}
             onChange={e => setBill(e.target.value)}
           />
-        </div>
-        <Button
-          type='button'
-          onClick={handleSubmit}
-          as={Link}
-          to={`/`}
-          variant='primary'
-          className='me-1'>
+          {errors.bill && (
+            <small className='d-block form-text text-danger ms-2 mt-2'>
+              Bill should not be lower than 0
+            </small>
+          )}
+        </Form.Group>
+        <Button type='submit' className='btn btn-primary me-1'>
           Update
         </Button>
-      </div>
+      </form>
     );
 };
 
