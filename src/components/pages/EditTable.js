@@ -30,7 +30,8 @@ const EditTable = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = e => {
+    e.preventDefault();
     dispatch(updateDataOnServer(id, updatedData));
     navigate(`/`);
   };
@@ -54,7 +55,7 @@ const EditTable = () => {
   if (!table) return <Navigate to='/' />;
   else
     return (
-      <form onSubmit={validate(handleSubmit)} className='ms-2'>
+      <form onSubmit={e => validate(handleSubmit(e))} className='ms-2'>
         <h2 className='fs-1'>{table.name}</h2>
         <Form.Group className='d-flex my-3'>
           <Form.Label style={{ width: '100px' }} className='my-auto'>
@@ -120,7 +121,8 @@ const EditTable = () => {
             </small>
           )}
         </Form.Group>
-        <Form.Group className={`d-flex my-3 `}>
+        <Form.Group
+          className={`my-3 ${status !== 'Busy' ? 'd-none' : 'd-flex '} `}>
           <Form.Label style={{ width: '100px' }} className='my-auto'>
             <b>Bill:</b>
           </Form.Label>
@@ -128,16 +130,18 @@ const EditTable = () => {
           <input
             {...register('bill', {
               min: 0,
+              pattern: {
+                value: /^[0-9]*$/,
+              },
             })}
             style={{ width: '60px' }}
-            type='number'
             className='ms-1 ps-1'
             value={bill}
             onChange={e => setBill(e.target.value)}
           />
           {errors.bill && (
             <small className='d-block form-text text-danger ms-2 mt-2'>
-              Bill should not be lower than 0
+              Bill should be number and not be lower than 0
             </small>
           )}
         </Form.Group>
