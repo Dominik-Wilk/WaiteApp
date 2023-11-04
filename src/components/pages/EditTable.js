@@ -31,19 +31,21 @@ const EditTable = () => {
   };
 
   const handleSubmit = e => {
-    e.preventDefault();
+    // e.preventDefault();
     dispatch(updateDataOnServer(id, updatedData));
     navigate(`/`);
   };
 
   const validatePeople = value => {
-    if (value > peopleAmount) {
-      setMaxPeopleAmount(value);
+    if (value > 10) {
+      setMaxPeopleAmount(10);
     } else {
-      setPeopleAmount(value);
+      setMaxPeopleAmount(value);
+      if (maxPeopleAmount < peopleAmount) {
+        setPeopleAmount(maxPeopleAmount);
+      }
     }
   };
-
   const {
     register,
     handleSubmit: validate,
@@ -83,13 +85,12 @@ const EditTable = () => {
             {...register('peopleAmount', {
               required: true,
               min: 0,
-              max: 10,
+              max: maxPeopleAmount,
             })}
             style={{ width: '30px' }}
             className='me-1 ps-1'
             name='peopleAmount'
             value={peopleAmount}
-            on
             onChange={e => {
               setPeopleAmount(e.target.value);
             }}
@@ -110,7 +111,7 @@ const EditTable = () => {
           />
           {errors.peopleAmount && (
             <small className='d-block form-text text-danger ms-2 mt-2'>
-              Amount of people is required and should not be greater than
+              Amount of people is required and should not be greater than{' '}
               {maxPeopleAmount}.
             </small>
           )}
