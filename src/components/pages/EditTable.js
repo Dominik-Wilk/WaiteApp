@@ -31,7 +31,7 @@ const EditTable = () => {
   };
 
   const handleSubmit = e => {
-    // e.preventDefault();
+    e.preventDefault();
     dispatch(updateDataOnServer(id, updatedData));
     navigate(`/`);
   };
