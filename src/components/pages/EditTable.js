@@ -30,8 +30,7 @@ const EditTable = () => {
     }
   };
 
-  const handleSubmit = e => {
-    e.preventDefault();
+  const handleSubmit = () => {
     dispatch(updateDataOnServer(id, updatedData));
     navigate(`/`);
   };
@@ -55,7 +54,7 @@ const EditTable = () => {
   if (!table) return <Navigate to='/' />;
   else
     return (
-      <form onSubmit={e => validate(handleSubmit(e))} className='ms-2'>
+      <form onSubmit={validate(handleSubmit)} className='ms-2'>
         <h2 className='fs-1'>{table.name}</h2>
         <Form.Group className='d-flex my-3'>
           <Form.Label style={{ width: '100px' }} className='my-auto'>
