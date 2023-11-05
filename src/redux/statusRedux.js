@@ -9,11 +9,14 @@ const createActionName = name => `api/tables/${name}`;
 const UPDATE_STATUSES = createActionName('UPDATE_STATUS');
 export const updateStatuses = payload => ({ type: UPDATE_STATUSES, payload });
 
-export const fetchStatuses = dispatch => {
-  fetch(`${API_URL}/statuses`)
-    .then(res => res.json())
-    .then(statuses => dispatch(updateStatuses(statuses)));
+export const fetchStatuses = () => {
+  return dispatch => {
+    fetch(`${API_URL}/statuses`)
+      .then(res => res.json())
+      .then(statuses => dispatch(updateStatuses(statuses)));
+  };
 };
+
 const reducer = (statePart = [], action) => {
   switch (action.type) {
     case UPDATE_STATUSES:

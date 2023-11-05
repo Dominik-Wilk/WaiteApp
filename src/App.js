@@ -10,23 +10,19 @@ import { useEffect, useRef } from 'react';
 import TableDetails from './components/pages/TableDetails';
 import EditTable from './components/pages/EditTable';
 import PageNotFound from './components/pages/PageNotFound';
+import AddTable from './components/pages/AddTable';
 
 const App = () => {
   const dispatch = useDispatch();
-  // const firstRender = useRef(true);
-
-  // useEffect(() => {
-  //   if (firstRender.current) {
-  //     firstRender.current = false;
-
-  //     dispatch(fetchStatuses());
-  //     dispatch(fetchTables());
-  //   }
-  // }, [dispatch]);
+  const firstRender = useRef(true);
 
   useEffect(() => {
-    fetchStatuses(dispatch);
-    fetchTables(dispatch);
+    if (firstRender.current) {
+      firstRender.current = false;
+
+      dispatch(fetchStatuses());
+      dispatch(fetchTables());
+    }
   }, [dispatch]);
 
   return (
@@ -36,6 +32,7 @@ const App = () => {
         <Route path={'/'} element={<Home />} />
         <Route path={'/table/:id'} element={<TableDetails />} />
         <Route path={'/table/update/:id'} element={<EditTable />} />
+        <Route path={'/table/add'} element={<AddTable />} />
         <Route path={'*'} element={<PageNotFound />} />
       </Routes>
       <Footer />
