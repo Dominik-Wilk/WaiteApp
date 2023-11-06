@@ -1,4 +1,4 @@
-import { createSelector } from '@reduxjs/toolkit';
+import { createSelector, nanoid } from '@reduxjs/toolkit';
 import { API_URL } from '../settings';
 
 const selectTables = state => state.tables;
@@ -13,9 +13,11 @@ const createActionName = name => `api/tables/${name}`;
 const UPDATE_TABLES = createActionName('UPDATE_TABLES');
 const EDIT_TABLE = createActionName('EDIT_TABLE');
 const REMOVE_TABLE = createActionName('REMOVE_TABLE');
+const ADD_TABLE = createActionName('ADD_TABLE');
 export const updateTables = payload => ({ type: UPDATE_TABLES, payload });
 export const editTable = payload => ({ type: EDIT_TABLE, payload });
 export const removeTable = payload => ({ type: REMOVE_TABLE, payload });
+export const addTable = payload => ({ type: ADD_TABLE, payload });
 
 export const fetchTables = () => {
   return dispatch => {
@@ -56,6 +58,19 @@ export const removeTableFromServer = id => {
   };
 };
 
+export const addTableToServer = newData => {
+  return dispatch => {
+    const options = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newData),
+    };
+    fetch(`${API_URL}/tables`, options)
+      .then(res => res.json())
+      .then(data => dispatch(addTable(data)));
+  };
+};
+
 const reducer = (statePart = [], action) => {
   switch (action.type) {
     case UPDATE_TABLES:
@@ -68,6 +83,8 @@ const reducer = (statePart = [], action) => {
       return statePart.map(table =>
         table.id === action.payload.id ? { ...table, ...action.payload } : table
       );
+    case ADD_TABLE:
+      return [...statePart, { ...action.payload, id: nanoid() }];
     default:
       return statePart;
   }
