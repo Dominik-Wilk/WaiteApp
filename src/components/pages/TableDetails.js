@@ -6,7 +6,6 @@ import { Button } from 'react-bootstrap';
 const TableDetails = () => {
   const { id } = useParams();
   const table = useSelector(state => getTableById(state, id));
-
   if (!table) return <Navigate to='/' />;
   else
     return (

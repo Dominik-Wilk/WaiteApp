@@ -1,4 +1,4 @@
-import { createSelector, nanoid } from '@reduxjs/toolkit';
+import { createSelector } from '@reduxjs/toolkit';
 import { API_URL } from '../settings';
 
 const selectTables = state => state.tables;
@@ -54,7 +54,7 @@ export const removeTableFromServer = id => {
 
     fetch(`${API_URL}/tables/${id}`, options)
       .then(res => res.json())
-      .then(data => dispatch(removeTable(data)));
+      .then(dispatch(removeTable(id)));
   };
 };
 
@@ -67,7 +67,9 @@ export const addTableToServer = newData => {
     };
     fetch(`${API_URL}/tables`, options)
       .then(res => res.json())
-      .then(data => dispatch(addTable(data)));
+      .then(data => {
+        dispatch(addTable(data));
+      });
   };
 };
 
@@ -82,7 +84,7 @@ const reducer = (statePart = [], action) => {
     case REMOVE_TABLE:
       return statePart.filter(table => table.id !== action.payload.id);
     case ADD_TABLE:
-      return [...statePart, { ...action.payload, id: nanoid() }];
+      return [...statePart, { ...action.payload }];
     default:
       return statePart;
   }

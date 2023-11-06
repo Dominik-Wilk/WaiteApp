@@ -5,6 +5,7 @@ import { getStatus } from '../../redux/statusRedux';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { addTableToServer, getTables } from '../../redux/tableRedux';
+import { nanoid } from '@reduxjs/toolkit';
 
 const AddTable = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,7 @@ const AddTable = () => {
   }`;
 
   const newData = {
+    id: nanoid(),
     name,
     status,
     peopleAmount,

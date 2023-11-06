@@ -19,7 +19,7 @@ const Home = () => {
           Add table
         </Button>
       </div>
-      {table.length === 0 ? <h2 id='ApiInfo'>Loading...</h2> : <RenderTable />}
+      {table.length === 0 ? <h2>Loading...</h2> : <RenderTable />}
     </>
   );
 };
