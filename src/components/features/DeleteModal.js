@@ -5,9 +5,9 @@ import { useDispatch } from 'react-redux';
 
 const DeleteModal = props => {
   const dispatch = useDispatch();
-
   const handleConfirm = () => {
     dispatch(removeTableFromServer(props.id));
+    props.onHide();
   };
 
   return (

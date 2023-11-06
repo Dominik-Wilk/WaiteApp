@@ -80,9 +80,7 @@ const reducer = (statePart = [], action) => {
         table.id === action.payload.id ? { ...table, ...action.payload } : table
       );
     case REMOVE_TABLE:
-      return statePart.map(table =>
-        table.id === action.payload.id ? { ...table, ...action.payload } : table
-      );
+      return statePart.filter(table => table.id !== action.payload.id);
     case ADD_TABLE:
       return [...statePart, { ...action.payload, id: nanoid() }];
     default:
