@@ -16,7 +16,9 @@ const AddTable = () => {
   const [maxPeopleAmount, setMaxPeopleAmount] = useState('6');
   const [bill, setBill] = useState('0');
 
-  const name = `Table ${table.length + 1}`;
+  const name = `Table ${
+    table.length > 0 ? +table[table.length - 1].name.slice(-1) + 1 : 1
+  }`;
 
   const newData = {
     name,
